@@ -2,10 +2,9 @@ from langchain.agents import AgentType, initialize_agent
 from langchain.agents import tool
 import thefuzz.fuzz as fuzz
 import polars as pl
-from langchain.schema import BaseLanguageModel
-from polars.internals import DataFrame
-from util import write_data
+from langchain.schema.language_model import BaseLanguageModel
 
+from util import write_data
 
 def get_column(col_name):
     fields = ["Kingdom", "Phylum", "Class", "Order", "Family", "Genus",
@@ -52,7 +51,7 @@ def get_anage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool =
         frame = frame.select(
             [pl.struct(["Science name", "Common name"]).apply(levenshtein_dist).alias("dist"), "Science name",
              "Common name", column_name])
-        frame = frame.sort(by="dist", reverse=True).select(["Science name", "Common name", column_name])
+        frame = frame.sort(by="dist", descending=True).select(["Science name", "Common name", column_name])
 
         return write_data(frame)
 
@@ -65,7 +64,7 @@ def get_anage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool =
         Input should be string with two parts separated with ';' sign.
         First part is column name and second is operation to be done on data in this column.
         Operation should be 'min' for minimum and 'max' for maximum operations.
-        For example input_text = 'Temperature;min' will return table with information about animal with smallest temperature.
+        For example input_text = 'Temperature;min' will return table with information about animal with the smallest temperature.
         Fields that could be query is following: Female maturity, Male maturity, Gestation/Incubation, Weaning, Litter/Clutch size, Litters/Clutches, Inter-litter/Interbirth interval, Birth weight, Weaning weight, Adult weight, Growth rate, Maximum longevity, Infant mortality rate IMR, Mortality Rate Doubling Time MRDT, Metabolic rate, Body mass, Temperature."""
         parts = input_text.split(";")
         column_name = get_column(parts[0].strip())
@@ -74,7 +73,7 @@ def get_anage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool =
         frame = pl.read_csv(table_path, infer_schema_length=0)
         frame = frame.with_columns((pl.col("Genus") + " " + pl.col("Species")).alias("Science name"))
         frame = frame.filter(~pl.col(column_name).is_null())
-        frame = frame.with_column(pl.col(column_name).cast(pl.Float32))
+        frame = frame.with_columns([pl.col(column_name).cast(pl.Float32)])
         if command.lower() == "max":
             return frame.filter(pl.max(column_name) == pl.col(column_name)).select(
                 ["Science name", "Common name", column_name])

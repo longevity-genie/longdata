@@ -2,33 +2,8 @@ from langchain.agents import AgentType, initialize_agent
 from langchain.agents import tool
 import thefuzz.fuzz as fuzz
 import polars as pl
-from langchain.schema import BaseLanguageModel
-from polars.internals import DataFrame
+from langchain.schema.language_model import BaseLanguageModel
 from util import write_data
-
-
-# def write_data(frame: DataFrame) -> str:
-#     res = ""
-#     i = 0
-#     for col in frame.get_columns():
-#         res += col.name + " ; "
-#     res = res[:-3] + "\n"
-#     for line in frame.rows():
-#         for cel in line:
-#             if cel is None:
-#                 res += "unknown ; "
-#             else:
-#                 res += str(cel) + " ; "
-#         res = res[:-3] + "\n"
-#         if i > 8:
-#             break
-#         i += 1
-#
-#     return res[:-1]
-
-
-
-
 
 geneage_template = """You are a very smart biology professor. \
 You are great at answering questions about longevity genes in a concise and easy to understand manner. \
@@ -36,7 +11,6 @@ When you don't know the answer to a question you admit that you don't know.
 
 Here is a question:
 {input}"""
-
 
 def get_geneage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool = False) -> dict:
     @tool
@@ -48,7 +22,7 @@ def get_geneage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool
         The method column describes the intervention type that was done in the experiment. Overexpression is the only type of intervention that
         makes a direct correlation with gene longevity influence. In other words, if Method is Overexpression and Lifespan Effect is increase
         then it is pro longevity influence. If Method is Overexpression and Lifespan Effect is decrease
-        then it is anti longevity influence. All other types of Method block gene expression and has invers correlation with longevity influence.
+        then it is anti longevity influence. All other types of Method block gene expression and has inverse correlation with longevity influence.
         For example if Method is Deletion and Lifespan Effect is increase then it is anti longevity influence. If Method is Knockout and
         Lifespan Effect is decrease then it is pro longevity influence.
         Input should be the string with the gene name. It could be Entrez Gene ID, Gene Symbol, Gene Name,
@@ -62,13 +36,13 @@ def get_geneage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool
                        fuzz.partial_ratio(" " + str(struct["Unigene ID"]) + " ".lower(), search_text),
                        fuzz.partial_ratio(" " + str(struct["Ensembl ID"]) + " ".lower(), search_text))
 
-        frame = pl.read_csv(table_path, sep=";", infer_schema_length=0)
+        frame = pl.read_csv(table_path, separator=";", infer_schema_length=0)
         frame = frame.select([pl.struct(
             ["Entrez Gene ID", "Gene Symbol", "Gene Name", "Unigene ID", "Ensembl ID"]).apply(levenshtein_dist).alias(
             "dist"),
                               "Entrez Gene ID", "Gene Symbol", "Gene Name", "Unigene ID", "Ensembl ID",
                               "Lifespan Effect", "Phenotype Description", "Longevity Influence", "Method"])
-        frame = frame.sort(by="dist", reverse=True).select(pl.exclude("dist"))
+        frame = frame.sort(by="dist", descending=True).select(pl.exclude("dist"))
 
         return write_data(frame)
 

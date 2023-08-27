@@ -1,7 +1,6 @@
 from polars import DataFrame
 import polars as pl
 
-
 def write_data(frame: DataFrame, max_rows: int = 8) -> str:
     res = ""
     for col in frame.get_columns():

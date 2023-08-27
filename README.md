@@ -1,2 +1,4 @@
-# gpt_databases
-Submodule of longevity-genie devoted to database querying
+# Longevity database agents
+
+Submodule of longevity-genie devoted to LLM agents that query databases
+

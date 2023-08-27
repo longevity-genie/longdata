@@ -1,0 +1,20 @@
+name: longevity-databases
+channels:
+  - conda-forge
+  - bioconda
+  - pytorch
+  - plotly
+  - defaults
+dependencies:
+  - python=3.10
+  - more-itertools
+  - setuptools
+  - click
+  - pip:
+      - pyfunctional
+      - pynction
+      - polars>=0.18.15
+      - langchain>=0.0.273
+      - pycomfort
+      - pyarrow
+      - python-Levenshtein
