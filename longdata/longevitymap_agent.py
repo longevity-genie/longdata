@@ -6,7 +6,7 @@ from langchain.schema.language_model import BaseLanguageModel
 from util import write_data
 
 def get_references(rsid: str) -> str:
-    frame = pl.read_csv("data/variants.tsv", sep="\t", infer_schema_length=0)
+    frame = pl.read_csv("data/variants.tsv", separator="\t", infer_schema_length=0)
     frame = frame.filter(pl.col("rsid") == rsid).with_column(
         ("https://pubmed.ncbi.nlm.nih.gov/" + pl.col("quickpubmed")).alias("quickpubmed")).select("quickpubmed")
     rows = frame.rows("quickpubmed")
@@ -37,7 +37,7 @@ def get_longevitymap_agent_info(llm: BaseLanguageModel, table_path:str, verbose:
         Usually, it is 0.5 for strong effect and 0.01 for weak effect.
         Input should be the string with the rsid. If there is no rsid in the table, say it has no longevity effect."""
 
-        frame1 = pl.read_csv(table_path, sep="\t", infer_schema_length=0)
+        frame1 = pl.read_csv(table_path, separator="\t", infer_schema_length=0)
         frame1 = frame1.filter(pl.col("rsid") == input_text).select(["rsid", "allele", "zygosity", "weight"])
 
         return write_data(frame1)

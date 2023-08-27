@@ -10,6 +10,7 @@ dependencies:
   - more-itertools
   - setuptools
   - click
+  - twine
   - pip:
       - pyfunctional
       - pynction

@@ -31,7 +31,7 @@ def get_anage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool =
     @tool
     def animal_information(input_text: str) -> str:
         """You should use this tool for getting information about animals. It returns csv table where rows separated with new line character
-        and columns with ";" symbol. This table containe information about different animals which names are similar but only one animal is what you need.
+        and columns with ";" symbol. This table contains information about different animals which names are similar but only one animal is what you need.
         First row is header of this table with fields "Science name", "Common name" and field from input text.
         Input should be string separated with ";" first part it is animal name, common name or latin name (Genus Species). Second part is column of interest.
         For example input_text = "dog;body mass" will query table with information about animals which name contain dog and with additional field "Body mass (g)".
