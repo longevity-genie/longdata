@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 DESCRIPTION = 'longevity-databases - longdata to work with common databases'
 LONG_DESCRIPTION = 'longevity-databases - longdata to work with common databases'
 
@@ -15,8 +15,8 @@ LONG_DESCRIPTION = 'longevity-databases - longdata to work with common databases
 setup(
     name="longdata",
     version=VERSION,
-    author="antonkulaga (Anton Kulaga)",
-    author_email="<antonkulaga@gmail.com>",
+    author="Alex Karmazin",
+    author_email="<karmazinalex@gmail.com>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=long_description,

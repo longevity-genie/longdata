@@ -32,11 +32,11 @@ def get_longevitymap_agent_info(llm: BaseLanguageModel, table_path:str, verbose:
         It returns csv table where rows are separated with new line characters and columns with ";" symbol.
         The first row is the header of this table. It has the following columns rsid, allele, zygosity, weight.
         rsid column is snp identifier for example rs1234, allele column is letter represents nucleotide in specific location.
-        zygosity column could be het for heterozygosity, two different allels and hom for homozygosity, two same alleles.
+        zygosity column could be het for heterozygosity, two different alleles and hom for homozygosity, two same alleles.
         If zygosity column is het and allele column is C, for example, it means that weight applies to all combinations of allels.
-        Such as CA, CG, CT, AC, GC, TC but not CC because it is homozygosity.
-        weight column has number from -1 to 1, minus means it has negative effect on longevity
-        and positive number means it have positive effect on longevity. Magnitude of this number represents effect strangs.
+        Such as CA, CG, CT, AC, GC, TC but not CC because it is homozygosity. Also, there is different notation C/A is the same as CA,
+        G/G is same as GG, T/A is same as TA. weight column has number from -1 to 1, minus means it has negative effect on longevity
+        and positive number means it have positive effect on longevity. Magnitude of this number represents effect strength.
         Usually, it is 0.5 for strong effect and 0.01 for weak effect.
         Input should be the string with the rsid. If there is no rsid in the table, say it has no longevity effect."""
 
