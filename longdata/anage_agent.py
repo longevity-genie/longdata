@@ -1,3 +1,5 @@
+from typing import Any
+
 from langchain.agents import AgentType, initialize_agent
 from langchain.agents import tool
 import thefuzz.fuzz as fuzz
@@ -26,7 +28,7 @@ When you don't know the answer to a question you admit that you don't know.
 Here is a question:
 {input}"""
 
-def get_anage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool = False) -> dict:
+def get_anage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool = False, **kwargs: Any,) -> dict:
 
     @tool
     def animal_information(input_text: str) -> str:
@@ -88,7 +90,8 @@ def get_anage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool =
         [animal_information, animals_min_max_information],
         llm,
         agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
-        verbose = verbose)
+        verbose = verbose,
+        **kwargs,)
 
     return {
         "name": "anage",

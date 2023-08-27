@@ -24,7 +24,8 @@ class LongevityDataChain(AgentRouterChain):
         genage = str(folder / "genage_models.csv")
         weights = str(folder / "longevitymap_weights.tsv")
         return cls.from_prompts(llm, [
-            get_anage_agent_info(llm, anage, verbose),
-            get_geneage_agent_info(llm, genage, verbose),
-            get_longevitymap_agent_info(llm, weights, verbose)]
+            get_anage_agent_info(llm, anage, verbose, **kwargs,),
+            get_geneage_agent_info(llm, genage, verbose, **kwargs,),
+            get_longevitymap_agent_info(llm, weights, verbose, **kwargs,)],
+            **kwargs,
         )

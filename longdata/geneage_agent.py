@@ -4,6 +4,7 @@ import thefuzz.fuzz as fuzz
 import polars as pl
 from langchain.schema.language_model import BaseLanguageModel
 from util import write_data
+from typing import Any
 
 geneage_template = """You are a very smart biology professor. \
 You are great at answering questions about longevity genes in a concise and easy to understand manner. \
@@ -12,7 +13,7 @@ When you don't know the answer to a question you admit that you don't know.
 Here is a question:
 {input}"""
 
-def get_geneage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool = False) -> dict:
+def get_geneage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool = False, **kwargs: Any,) -> dict:
     @tool
     def gene_information(input_text: str) -> str:
         """You should use this tool to get information about animal genes.
@@ -50,7 +51,8 @@ def get_geneage_agent_info(llm: BaseLanguageModel, table_path:str, verbose: bool
         [gene_information],
         llm,
         agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
-        verbose=verbose)
+        verbose=verbose,
+        **kwargs,)
 
     return {
         "name": "geneage",

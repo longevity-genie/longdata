@@ -46,7 +46,6 @@ class AgentRouterChain(MultiRouteChain):
         return cls(
             router_chain=router_chain,
             destination_chains=destination_chains,
-            default_chain=_default_chain,
-            **kwargs,
+            default_chain=_default_chain
         )
 

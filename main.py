@@ -8,16 +8,13 @@ key_path = find_dotenv()
 _ = load_dotenv(key_path, override=True)
 
 from langchain.chat_models import ChatOpenAI
-from longdata.agent_router_chain import AgentRouterChain
-from longdata.anage_agent import get_anage_agent_info
-from longdata.geneage_agent import get_geneage_agent_info
-from longdata.longevitymap_agent import get_longevitymap_agent_info
 
 
 def main():
-    model = "gpt-4" #"gpt-3.5-turbo"
+    # model ="gpt-3.5-turbo"
+    model = "gpt-4"
     llm = ChatOpenAI(model=model, temperature=0)
-    router = LongevityDataChain.from_folder(llm, Path("data"))
+    router = LongevityDataChain.from_folder(llm, Path("data"), return_intermediate_steps = True)
 
     with open("data/questions_short.tsv") as f:
         lines = f.readlines()
